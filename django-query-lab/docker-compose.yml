@@ -1,0 +1,27 @@
+services:
+  pg:
+    image: postgres:16
+    environment:
+      POSTGRES_PASSWORD: devpass
+      POSTGRES_DB: shop
+    ports: ["5432:5432"]
+    command: >
+      postgres -c shared_preload_libraries=pg_stat_statements
+               -c pg_stat_statements.track=all
+               -c shared_buffers=1GB
+    volumes: [pgdata:/var/lib/postgresql/data]
+
+  mysql:
+    image: mysql:8.4
+    environment:
+      MYSQL_ROOT_PASSWORD: devpass
+      MYSQL_DATABASE: shop
+    ports: ["3306:3306"]
+    command: >
+      --slow-query-log=ON --long-query-time=0.5
+      --innodb-buffer-pool-size=1G
+    volumes: [mysqldata:/var/lib/mysql]
+
+volumes:
+  pgdata: {}
+  mysqldata: {}
